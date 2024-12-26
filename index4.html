@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Cédula de Identidad</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            text-align: center;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+        .success {
+            color: green;
+            font-size: 14px;
+        }
+        .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .icon.check {
+            background-color: green;
+            clip-path: polygon(50% 0%, 75% 25%, 100% 0, 100% 50%, 50% 100%, 0 50%, 25% 25%);
+        }
+        .icon.cross {
+            background-color: red;
+            clip-path: polygon(0 0, 25% 0, 50% 25%, 75% 0, 100% 0, 100% 25%, 75% 50%, 100% 75%, 100% 100%, 75% 100%, 50% 75%, 25% 100%, 0 100%, 0 75%, 25% 50%, 0 25%);
+        }
+    </style>
+</head>
+<body>
+    <h1>Registro de Cédula de Identidad</h1>
+    <form id="cedulaForm">
+        <label for="cedula">Ingrese su cédula de identidad:</label>
+        <div style="position: relative;">
+            <input type="text" id="cedula" name="cedula" placeholder="Ingrese aquí su cédula" maxlength="10">
+            <div id="icon" class="icon" style="display: none;"></div>
+        </div>
+        <div id="message" class="error"></div>
+        <button type="submit">Registrar</button>
+    </form>
+
+    <script>
+        const cedulaInput = document.getElementById('cedula');
+        const form = document.getElementById('cedulaForm');
+        const message = document.getElementById('message');
+        const icon = document.getElementById('icon');
+
+        cedulaInput.addEventListener('input', () => {
+            const value = cedulaInput.value;
+
+            // Mostrar icono de error si hay caracteres no válidos
+            if (/[^\d]/.test(value)) {
+                icon.style.display = "block";
+                icon.className = "icon cross";
+                message.textContent = "La cédula debe contener solo números.";
+                message.className = "error";
+            } else {
+                icon.style.display = "none";
+                message.textContent = "";
+            }
+        });
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const value = cedulaInput.value;
+
+            // Validar que no haya caracteres no numéricos
+            if (/[^\d]/.test(value)) {
+                message.textContent = "La cédula no debe contener caracteres no válidos.";
+                message.className = "error";
+                icon.style.display = "block";
+                icon.className = "icon cross";
+                return;
+            }
+
+            const cedula = value.trim();
+
+            if (cedula === "") {
+                message.textContent = "El campo de cédula no puede estar vacío.";
+                message.className = "error";
+                icon.style.display = "block";
+                icon.className = "icon cross";
+                return;
+            }
+
+            if (cedula.length < 7 || cedula.length > 10) {
+                message.textContent = "La cédula debe tener entre 7 y 10 dígitos.";
+                message.className = "error";
+                icon.style.display = "block";
+                icon.className = "icon cross";
+                return;
+            }
+
+            // Si pasa todas las validaciones
+            message.textContent = "Cédula registrada exitosamente: " + cedula;
+            message.className = "success";
+            icon.style.display = "block";
+            icon.className = "icon check";
+
+            // Reiniciar el formulario después de un registro exitoso
+            cedulaInput.value = "";
+        });
+    </script>
+</body>
+</html>
+
